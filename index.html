@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Classification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        #imageContainer {
+            margin-bottom: 20px;
+        }
+        #selectedImage {
+            max-width: 400px;
+            max-height: 400px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: none;
+        }
+        #prediction {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        #uploadButton, #classifyButton {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin: 10px;
+            transition: background-color 0.3s;
+        }
+        #uploadButton:hover, #classifyButton:hover {
+            background-color: #45a049;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.6.0/dist/tf.min.js"></script>
+    <script>
+        let model;
+        const classNames = ['Ak', 'Ala_Idris', 'Buzgulu', 'Dimnit', 'Nazli'];
+
+        async function loadModel() {
+            model = await tf.loadLayersModel('https://your-github-username.github.io/your-repo-name/tfjs_model/model.json');
+            console.log("Model loaded");
+        }
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            reader.onload = function() {
+                const output = document.getElementById('selectedImage');
+                output.src = reader.result;
+                output.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function classifyImage() {
+            if (!model) {
+                alert("Model not loaded yet. Please wait and try again.");
+                return;
+            }
+
+            const inputElement = document.getElementById('imageInput');
+            if (inputElement.files.length === 0) {
+                alert("Please select an image first.");
+                return;
+            }
+
+            const image = inputElement.files[0];
+            const img = new Image();
+            img.src = URL.createObjectURL(image);
+            await img.decode();
+            const tensor = tf.browser.fromPixels(img).resizeNearestNeighbor([224, 224]).toFloat().expandDims();
+            const normalizedTensor = tensor.div(tf.scalar(255));
+            const predictions = model.predict(normalizedTensor);
+            const classIdx = predictions.argMax(-1).dataSync()[0];
+
+            document.getElementById('prediction').innerText = 'Prediction: ' + classNames[classIdx];
+        }
+
+        window.onload = loadModel;
+    </script>
+</head>
+<body>
+    <h1>Image Classification</h1>
+    <div id="imageContainer">
+        <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="handleFileSelect(event)">
+        <img id="selectedImage">
+    </div>
+    <button id="uploadButton" onclick="document.getElementById('imageInput').click()">Upload Image</button>
+    <button id="classifyButton" onclick="classifyImage()">Classify</button>
+    <div id="prediction"></div>
+</body>
+</html>
