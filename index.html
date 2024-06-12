@@ -43,6 +43,10 @@
         #uploadButton:hover, #classifyButton:hover {
             background-color: #45a049;
         }
+        #loadingMessage {
+            display: none;
+            margin-top: 20px;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.6.0/dist/tf.min.js"></script>
     <script>
@@ -51,10 +55,15 @@
 
         async function loadModel() {
             try {
+                // Show loading message
+                document.getElementById('loadingMessage').style.display = 'block';
+                
                 model = await tf.loadLayersModel('https://github.com/DesireeDomingo-BSIT2B/finalproject/blob/main/tfjs_model/model.json');
                 console.log("Model loaded successfully");
                 // Enable classify button after model is loaded
                 document.getElementById('classifyButton').disabled = false;
+                // Hide loading message
+                document.getElementById('loadingMessage').style.display = 'none';
             } catch (error) {
                 console.error("Error loading the model:", error);
             }
@@ -107,5 +116,6 @@
     <button id="uploadButton" onclick="document.getElementById('imageInput').click()">Upload Image</button>
     <button id="classifyButton" onclick="classifyImage()" disabled>Classify</button>
     <div id="prediction"></div>
+    <div id="loadingMessage">Loading model...</div>
 </body>
 </html>
