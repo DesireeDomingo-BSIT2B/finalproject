@@ -53,8 +53,6 @@
             try {
                 model = await tf.loadLayersModel('https://github.com/DesireeDomingo-BSIT2B/finalproject/blob/main/tfjs_model/model.json');
                 console.log("Model loaded successfully");
-                // Enable classify button after model is loaded
-                document.getElementById('classifyButton').disabled = false;
             } catch (error) {
                 console.error("Error loading the model:", error);
             }
@@ -105,7 +103,7 @@
         <img id="selectedImage">
     </div>
     <button id="uploadButton" onclick="document.getElementById('imageInput').click()">Upload Image</button>
-    <button id="classifyButton" onclick="classifyImage()" disabled>Classify</button>
+    <button id="classifyButton" onclick="classifyImage()">Classify</button>
     <div id="prediction"></div>
 </body>
 </html>
