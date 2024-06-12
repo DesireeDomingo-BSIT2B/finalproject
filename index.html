@@ -50,8 +50,12 @@
         const classNames = ['Ak', 'Ala_Idris', 'Buzgulu', 'Dimnit', 'Nazli'];
 
         async function loadModel() {
-            model = await tf.loadLayersModel('https://github.com/DesireeDomingo-BSIT2B/finalproject/blob/main/tfjs_model/model.json');
-            console.log("Model loaded");
+            try {
+                model = await tf.loadLayersModel('https://your-github-username.github.io/your-repo-name/tfjs_model/model.json');
+                console.log("Model loaded successfully");
+            } catch (error) {
+                console.error("Error loading the model:", error);
+            }
         }
 
         function handleFileSelect(event) {
