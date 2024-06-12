@@ -45,9 +45,30 @@
         #uploadButton:hover, #classifyButton:hover {
             background-color: #45a049;
         }
-        #loadingMessage {
+        #loadingOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.7);
             display: none;
-            margin-top: 20px;
+        }
+        #loadingSpinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.6.0/dist/tf.min.js"></script>
@@ -57,15 +78,15 @@
 
         async function loadModel() {
             try {
-                // Show loading message
-                document.getElementById('loadingMessage').style.display = 'block';
-                
+                // Show loading overlay
+                document.getElementById('loadingOverlay').style.display = 'block';
+
                 model = await tf.loadLayersModel('https://github.com/DesireeDomingo-BSIT2B/finalproject/blob/main/tfjs_model/model.json');
                 console.log("Model loaded successfully");
                 // Enable classify button after model is loaded
                 document.getElementById('classifyButton').disabled = false;
-                // Hide loading message
-                document.getElementById('loadingMessage').style.display = 'none';
+                // Hide loading overlay
+                document.getElementById('loadingOverlay').style.display = 'none';
             } catch (error) {
                 console.error("Error loading the model:", error);
             }
@@ -118,6 +139,8 @@
     <button id="uploadButton" onclick="document.getElementById('imageInput').click()">Upload Image</button>
     <button id="classifyButton" onclick="classifyImage()" disabled>Classify</button>
     <div id="prediction"></div>
-    <div id="loadingMessage">Loading model...</div>
+    <div id="loadingOverlay">
+        <div id="loadingSpinner"></div>
+    </div>
 </body>
 </html>
