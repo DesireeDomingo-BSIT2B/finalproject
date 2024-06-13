@@ -7,7 +7,7 @@ import os
 
 st.title("Grapevine Image Classification")
 
-MODEL_URL = "https://github.com/DesireeDomingo-BSIT2B/finalproject/blob/main/"
+MODEL_URL = "https://github.com/DesireeDomingo-BSIT2B/finalproject/raw/main/save_model.keras"
 
 def download_model(url, filename):
     if not os.path.exists(filename):
@@ -21,6 +21,7 @@ def download_model(url, filename):
 def load_model():
     download_model(MODEL_URL, 'model.keras')
     model = tf.keras.models.load_model('model.keras')
+    st.write("Model loaded successfully")  # Debug statement to confirm model loading
     return model
 
 model = load_model()
@@ -40,8 +41,11 @@ if uploaded_file is not None:
         img_array = img_array / 255.0  # Normalize to [0, 1]
         img_array = np.expand_dims(img_array, axis=0)  # Add batch dimension
 
+        st.write("Image preprocessed for prediction")  # Debug statement for preprocessing
+
         # Make predictions
         predictions = model.predict(img_array)
+        st.write(f"Predictions: {predictions}")  # Debug statement for predictions
         
         # Assuming you have a list of class names
         classNames = ['Ak', 'Ala_Idris', 'Buzgulu', 'Dimnit', 'Nazli']
@@ -50,4 +54,4 @@ if uploaded_file is not None:
         
     except Exception as e:
         st.error(f"Error in classifying the image: {e}")
-        st.write(e)  # Log the detailed exception for debugging   
+        st.write(e)  # Log the detailed exception for debugging
