@@ -43,7 +43,7 @@ if uploaded_file is not None:
         st.write(f"Resized image shape: {img_array.shape}")  # Debug statement for resized image shape
 
         img_array = img_array / 255.0  # Normalize to [0, 1]
-        img_array = np.expand_dims(img_array, axis=1)  # Add batch dimension
+        img_array = np.expand_dims(img_array, axis=0)  # Add batch dimension
         st.write(f"Final image shape for prediction: {img_array.shape}")  # Debug statement for final image shape
 
         # Check the model's input shape
