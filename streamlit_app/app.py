@@ -2,8 +2,8 @@ import streamlit as st
 import tensorflow as tf
 from PIL import Image
 import numpy as np
+import requests
 import os
-import pathlib
 
 st.title("Grapevine Image Classification")
 
@@ -43,10 +43,7 @@ if uploaded_file is not None:
         img_height = 180
         img_width = 180
 
-        img_array = np.array(image)
-        st.write(f"Original image shape: {img_array.shape}")  # Debug statement for original image shape
-
-        img_array = tf.image.resize(img_array, [img_height, img_width])
+        img_array = np.array(image.resize((img_height, img_width)))  # Resize the image
         st.write(f"Resized image shape: {img_array.shape}")  # Debug statement for resized image shape
 
         img_array = np.expand_dims(img_array, axis=0)  # Add batch dimension
@@ -60,12 +57,9 @@ if uploaded_file is not None:
         predictions = model.predict(img_array)
         st.write(f"Predictions: {predictions}")  # Debug statement for predictions
 
-        # Load class names from the dataset
-        dataset_folder_path = "https://github.com/DesireeDomingo-BSIT2B/finalproject/raw/main/Grapevine_Leaves.zip"
-        data_dir = pathlib.Path(dataset_folder_path)
-        class_names = sorted(item.name for item in data_dir.glob('*/') if item.is_dir())
-
-        predicted_class = class_names[np.argmax(predictions)]
+        # Assuming you have a list of class names
+        classNames = ['Ak', 'Ala_Idris', 'Buzgulu', 'Dimnit', 'Nazli']
+        predicted_class = classNames[np.argmax(predictions)]
         st.write(f'Prediction: {predicted_class}')
         
     except Exception as e:
