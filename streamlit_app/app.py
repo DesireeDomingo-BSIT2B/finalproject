@@ -8,7 +8,7 @@ from io import BytesIO
 # Function to load the saved model
 @st.cache(allow_output_mutation=True)
 def load_saved_model():
-    model_url = "https://github.com/DesireeDomingo-BSIT2B/finalproject/raw/main/saved_model"
+    model_url = "https://github.com/DesireeDomingo-BSIT2B/finalproject/raw/main/saved_model/saved_model.pb"
     model = tf.saved_model.load(model_url)
     return model
 
