@@ -25,7 +25,7 @@ def load_model():
 
 model = load_model()
 
-uploaded_file = st.file_uploader("Choose an image...", type="png")
+uploaded_file = st.file_uploader("Choose an image...", type=["png", "jpg", "jpeg"])
 
 if uploaded_file is not None:
     try:
@@ -33,13 +33,13 @@ if uploaded_file is not None:
         st.image(image, caption='Uploaded Image', use_column_width=True)
         st.write("")
         st.write("Classifying...")
-        
+
         # Preprocess the image
         img_array = np.array(image)
         img_array = tf.image.resize(img_array, [224, 224])
         img_array = img_array / 255.0  # Normalize to [0, 1]
         img_array = np.expand_dims(img_array, axis=0)  # Add batch dimension
-        
+
         # Make predictions
         predictions = model.predict(img_array)
         
@@ -50,3 +50,4 @@ if uploaded_file is not None:
         
     except Exception as e:
         st.error(f"Error in classifying the image: {e}")
+        st.write(e)  # Log the detailed exception for debugging
