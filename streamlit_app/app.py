@@ -51,12 +51,3 @@ if uploaded_file is not None:
     except Exception as e:
         st.error(f"Error in classifying the image: {e}")
         st.write(e)  # Log the detailed exception for debugging
-i have problem in predicting the image
-
-it says File "/mount/src/finalproject/streamlit_app/app.py", line 44, in <module>
-    predictions = model.predict(img_array)
-                  ^^^^^^^^^^^^^^^^^^^^^^^^
-File "/home/adminuser/venv/lib/python3.11/site-packages/keras/src/utils/traceback_utils.py", line 122, in error_handler
-    raise e.with_traceback(filtered_tb) from None
-File "/home/adminuser/venv/lib/python3.11/site-packages/keras/src/utils/io_utils.py", line 99, in print_msg
-    sys.stdout.flush()
