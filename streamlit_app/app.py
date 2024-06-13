@@ -7,7 +7,7 @@ import os
 
 st.title("Grapevine Image Classification")
 
-MODEL_URL = "https://github.com/DesireeDomingo-BSIT2B/finalproject/blob/main/grapevinemodel.keras"
+MODEL_URL = "https://github.com/DesireeDomingo-BSIT2B/finalproject/raw/main/keras_saved_model/model.keras"
 
 def download_model(url, filename):
     if not os.path.exists(filename):
@@ -36,7 +36,7 @@ if uploaded_file is not None:
 
         # Preprocess the image
         img_array = np.array(image)
-        img_array = tf.image.resize(img_array, [224, 224])
+        img_array = tf.image.resize(img_array, [180, 180])  # Adjusted to match the model input size
         img_array = img_array / 255.0  # Normalize to [0, 1]
         img_array = np.expand_dims(img_array, axis=0)  # Add batch dimension
 
