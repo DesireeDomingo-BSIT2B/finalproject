@@ -81,7 +81,7 @@
                 // Show loading overlay
                 document.getElementById('loadingOverlay').style.display = 'block';
 
-                model = await tf.loadLayersModel('https://github.com/DesireeDomingo-BSIT2B/finalproject/blob/main/grapevinemodel.keras');
+                model = await tf.loadLayersModel('https://github.com/DesireeDomingo-BSIT2B/finalproject/blob/main/save_model.keras');
                 console.log("Model loaded successfully");
                 // Enable classify button after model is loaded
                 document.getElementById('classifyButton').disabled = false;
