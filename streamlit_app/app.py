@@ -2,20 +2,22 @@ import streamlit as st
 import tensorflow as tf
 from PIL import Image
 import numpy as np
+import requests
 import os
-import gdown
 
 st.title("Grapevine Image Classification")
 
-MODEL_URL = "https://drive.google.com/uc?id=1I365mvqJyBH5AGp5snnfZtXOTJpNPxp_"
+MODEL_URL = "https://github.com/DesireeDomingo-BSIT2B/finalproject/raw/main/grapevinemodel.keras"
 
 def download_model(url, filename):
     if not os.path.exists(filename):
         with st.spinner("Downloading model..."):
-            gdown.download(url, filename, quiet=False)
+            response = requests.get(url)
+            with open(filename, 'wb') as file:
+                file.write(response.content)
             st.success("Model downloaded successfully!")
 
-@st.cache
+@st.cache_resource
 def load_model():
     download_model(MODEL_URL, 'model.keras')
     model = tf.keras.models.load_model('model.keras')
@@ -49,3 +51,12 @@ if uploaded_file is not None:
     except Exception as e:
         st.error(f"Error in classifying the image: {e}")
         st.write(e)  # Log the detailed exception for debugging
+i have problem in predicting the image
+
+it says File "/mount/src/finalproject/streamlit_app/app.py", line 44, in <module>
+    predictions = model.predict(img_array)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+File "/home/adminuser/venv/lib/python3.11/site-packages/keras/src/utils/traceback_utils.py", line 122, in error_handler
+    raise e.with_traceback(filtered_tb) from None
+File "/home/adminuser/venv/lib/python3.11/site-packages/keras/src/utils/io_utils.py", line 99, in print_msg
+    sys.stdout.flush()
