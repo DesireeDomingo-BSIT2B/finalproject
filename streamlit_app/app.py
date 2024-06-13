@@ -7,7 +7,6 @@ import os
 
 st.title("Grapevine Image Classification")
 
-# Define the URL where your model is stored
 MODEL_URL = "https://github.com/DesireeDomingo-BSIT2B/finalproject/raw/main/model.h5"
 
 def download_model(url, filename):
@@ -37,7 +36,7 @@ if uploaded_file is not None:
 
         # Preprocess the image
         img_array = np.array(image)
-        img_array = tf.image.resize(img_array, [180, 180])  # Adjust to match the model input size
+        img_array = tf.image.resize(img_array, [180, 180])  # Resize to match model input size
         img_array = img_array / 255.0  # Normalize to [0, 1]
         img_array = np.expand_dims(img_array, axis=0)  # Add batch dimension
 
@@ -45,8 +44,8 @@ if uploaded_file is not None:
         predictions = model.predict(img_array)
         
         # Assuming you have a list of class names
-        classNames = ['Ak', 'Ala_Idris', 'Buzgulu', 'Dimnit', 'Nazli']
-        predicted_class = classNames[np.argmax(predictions)]
+        class_names = ['Ak', 'Ala_Idris', 'Buzgulu', 'Dimnit', 'Nazli']
+        predicted_class = class_names[np.argmax(predictions)]
         st.write(f'Prediction: {predicted_class}')
         
     except Exception as e:
