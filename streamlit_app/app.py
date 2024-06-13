@@ -7,7 +7,7 @@ st.title("Grapevine Image Classification")
 
 @st.cache_resource
 def load_model():
-    model = tf.keras.models.load_model('model.keras')
+    model = tf.keras.models.load_model('https://github.com/DesireeDomingo-BSIT2B/finalproject/blob/main/grapevinemodel.keras')
     return model
 
 model = load_model()
