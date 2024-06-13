@@ -9,9 +9,9 @@ app = Flask(__name__)
 # Function to load model from URL
 def load_model_from_url(url):
     response = requests.get(url)
-    with open('model.keras', 'wb') as f:
+    with open('save_model.keras', 'wb') as f:
         f.write(response.content)
-    return tf.keras.models.load_model('model.keras')
+    return tf.keras.models.load_model('save_model.keras')
 
 # Load model from URL
 MODEL_URL = "https://github.com/DesireeDomingo-BSIT2B/finalproject/raw/main/save_model.keras"
