@@ -7,7 +7,7 @@ import os
 
 st.title("Grapevine Image Classification")
 
-MODEL_URL = "https://github.com/DesireeDomingo-BSIT2B/finalproject/raw/main/keras_saved_model/model.keras"
+MODEL_URL = "https://github.com/DesireeDomingo-BSIT2B/finalproject/raw/main/grapevinemodel.keras"
 
 def download_model(url, filename):
     if not os.path.exists(filename):
@@ -21,6 +21,7 @@ def download_model(url, filename):
 def load_model():
     download_model(MODEL_URL, 'model.keras')
     model = tf.keras.models.load_model('model.keras')
+    st.write("Model loaded successfully")  # Debug statement to confirm model loading
     return model
 
 model = load_model()
@@ -36,13 +37,22 @@ if uploaded_file is not None:
 
         # Preprocess the image
         img_array = np.array(image)
-        img_array = tf.image.resize(img_array, [180, 180])  # Adjusted to match the model input size
+        st.write(f"Original image shape: {img_array.shape}")  # Debug statement for original image shape
+
+        img_array = tf.image.resize(img_array, [224, 224])
+        st.write(f"Resized image shape: {img_array.shape}")  # Debug statement for resized image shape
+
         img_array = img_array / 255.0  # Normalize to [0, 1]
         img_array = np.expand_dims(img_array, axis=0)  # Add batch dimension
+        st.write(f"Final image shape for prediction: {img_array.shape}")  # Debug statement for final image shape
+
+        # Check the model's input shape
+        st.write(f"Model's input shape: {model.input_shape}")  # Debug statement for model input shape
 
         # Make predictions
         predictions = model.predict(img_array)
-        
+        st.write(f"Predictions: {predictions}")  # Debug statement for predictions
+
         # Assuming you have a list of class names
         classNames = ['Ak', 'Ala_Idris', 'Buzgulu', 'Dimnit', 'Nazli']
         predicted_class = classNames[np.argmax(predictions)]
