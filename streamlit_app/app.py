@@ -1,10 +1,11 @@
 import streamlit as st
 from PIL import Image
 import numpy as np
-import requests
 import tensorflow as tf
+import requests
+from io import BytesIO
 
-# Function to load the saved model from GitHub
+# Function to load the saved model
 @st.cache(allow_output_mutation=True)
 def load_saved_model():
     model_url = "https://github.com/DesireeDomingo-BSIT2B/finalproject/raw/main/saved_model"
