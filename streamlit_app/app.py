@@ -2,19 +2,17 @@ import streamlit as st
 import tensorflow as tf
 from PIL import Image
 import numpy as np
-import requests
 import os
+import gdown
 
 st.title("Grapevine Image Classification")
 
-MODEL_URL = "https://github.com/DesireeDomingo-BSIT2B/finalproject/raw/main/model1.keras"
+MODEL_URL = "https://drive.google.com/uc?id=1I365mvqJyBH5AGp5snnfZtXOTJpNPxp_"
 
 def download_model(url, filename):
     if not os.path.exists(filename):
         with st.spinner("Downloading model..."):
-            response = requests.get(url)
-            with open(filename, 'wb') as file:
-                file.write(response.content)
+            gdown.download(url, filename, quiet=False)
             st.success("Model downloaded successfully!")
 
 @st.cache
