@@ -2,12 +2,13 @@ import streamlit as st
 import tensorflow as tf
 from PIL import Image
 import numpy as np
-import requests
 import os
+import pathlib
 
 st.title("Grapevine Image Classification")
 
-MODEL_URL = "https://github.com/DesireeDomingo-BSIT2B/finalproject/blob/main/save_model.keras"
+MODEL_URL = "https://github.com/DesireeDomingo-BSIT2B/finalproject/raw/main/save_model.keras"
+DATASET_URL = "https://github.com/DesireeDomingo-BSIT2B/finalproject/raw/main/Grapevine_Leaves.zip"
 
 def download_model(url, filename):
     if not os.path.exists(filename):
@@ -17,7 +18,7 @@ def download_model(url, filename):
                 file.write(response.content)
             st.success("Model downloaded successfully!")
 
-@st.cache_resource
+@st.cache(allow_output_mutation=True)
 def load_model():
     download_model(MODEL_URL, 'model.keras')
     model = tf.keras.models.load_model('model.keras')
@@ -25,6 +26,9 @@ def load_model():
     return model
 
 model = load_model()
+
+# Define the normalization layer
+normalization_layer = tf.keras.layers.Rescaling(1./255)
 
 uploaded_file = st.file_uploader("Choose an image...", type=["png", "jpg", "jpeg"])
 
@@ -36,26 +40,32 @@ if uploaded_file is not None:
         st.write("Classifying...")
 
         # Preprocess the image
+        img_height = 180
+        img_width = 180
+
         img_array = np.array(image)
         st.write(f"Original image shape: {img_array.shape}")  # Debug statement for original image shape
 
-        img_array = tf.image.resize(img_array, [224, 224])
+        img_array = tf.image.resize(img_array, [img_height, img_width])
         st.write(f"Resized image shape: {img_array.shape}")  # Debug statement for resized image shape
 
-        img_array = img_array / 255.0  # Normalize to [0, 1]
         img_array = np.expand_dims(img_array, axis=0)  # Add batch dimension
-        st.write(f"Final image shape for prediction: {img_array.shape}")  # Debug statement for final image shape
 
-        # Check the model's input shape
-        st.write(f"Model's input shape: {model.input_shape}")  # Debug statement for model input shape
+        # Normalize the image
+        img_array = normalization_layer(img_array)
+
+        st.write(f"Final image shape for prediction: {img_array.shape}")  # Debug statement for final image shape
 
         # Make predictions
         predictions = model.predict(img_array)
         st.write(f"Predictions: {predictions}")  # Debug statement for predictions
 
-        # Assuming you have a list of class names
-        classNames = ['Ak', 'Ala_Idris', 'Buzgulu', 'Dimnit', 'Nazli']
-        predicted_class = classNames[np.argmax(predictions)]
+        # Load class names from the dataset
+        dataset_folder_path = "https://github.com/DesireeDomingo-BSIT2B/finalproject/raw/main/Grapevine_Leaves.zip"
+        data_dir = pathlib.Path(dataset_folder_path)
+        class_names = sorted(item.name for item in data_dir.glob('*/') if item.is_dir())
+
+        predicted_class = class_names[np.argmax(predictions)]
         st.write(f'Prediction: {predicted_class}')
         
     except Exception as e:
