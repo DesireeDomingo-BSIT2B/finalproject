@@ -1,49 +1,54 @@
 import streamlit as st
+import tensorflow as tf
 from PIL import Image
 import numpy as np
-import tensorflow as tf
 import requests
-from io import BytesIO
+import os
 
-# Function to load the saved model
-@st.cache(allow_output_mutation=True)
-def load_saved_model():
-    model_url = "https://github.com/DesireeDomingo-BSIT2B/finalproject/raw/main/saved_model/saved_model.pb"
-    model = tf.saved_model.load(model_url)
+st.title("Grapevine Image Classification")
+
+MODEL_URL = "https://github.com/DesireeDomingo-BSIT2B/finalproject/raw/main/grapevinemodel.keras"
+
+def download_model(url, filename):
+    if not os.path.exists(filename):
+        with st.spinner("Downloading model..."):
+            response = requests.get(url)
+            with open(filename, 'wb') as file:
+                file.write(response.content)
+            st.success("Model downloaded successfully!")
+
+@st.cache_resource
+def load_model():
+    download_model(MODEL_URL, 'model.keras')
+    model = tf.keras.models.load_model('model.keras')
     return model
 
-# Function to preprocess the uploaded image
-def preprocess_image(image):
-    image = image.convert('RGB')
-    image = image.resize((224, 224))
-    image = np.array(image) / 255.0
-    image = np.expand_dims(image, axis=0)
-    return image
+model = load_model()
 
-# Function to make predictions
-def make_prediction(image, model):
-    image = preprocess_image(image)
-    prediction = model(image)['predictions'][0].numpy()
-    return prediction
+uploaded_file = st.file_uploader("Choose an image...", type=["png", "jpg", "jpeg"])
 
-# Streamlit app
-def main():
-    st.title('Image Classifier')
+if uploaded_file is not None:
+    try:
+        image = Image.open(uploaded_file).convert('RGB')  # Ensure image is in RGB format
+        st.image(image, caption='Uploaded Image', use_column_width=True)
+        st.write("")
+        if st.button('Classify'):
+            st.write("Classifying...")
 
-    # Load the saved model
-    model = load_saved_model()
+            # Preprocess the image
+            img_array = np.array(image)
+            img_array = tf.image.resize(img_array, [224, 224])
+            img_array = img_array / 255.0  # Normalize to [0, 1]
+            img_array = np.expand_dims(img_array, axis=0)  # Add batch dimension
 
-    # Upload image
-    uploaded_image = st.file_uploader("Upload an image", type=["jpg", "png", "jpeg"])
-
-    if uploaded_image is not None:
-        image = Image.open(uploaded_image)
-        st.image(image, caption="Uploaded Image", use_column_width=True)
-
-        # Make prediction
-        prediction = make_prediction(image, model)
-
-        st.write("Prediction:", prediction)
-
-if __name__ == "__main__":
-    main()
+            # Make predictions
+            predictions = model.predict(img_array)
+            
+            # Assuming you have a list of class names
+            classNames = ['Ak', 'Ala_Idris', 'Buzgulu', 'Dimnit', 'Nazli']
+            predicted_class = classNames[np.argmax(predictions)]
+            st.write(f'Prediction: {predicted_class}')
+        
+    except Exception as e:
+        st.error(f"Error in classifying the image: {e}")
+        st.write(e)  # Log the detailed exception for debugging
