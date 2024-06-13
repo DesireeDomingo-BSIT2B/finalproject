@@ -7,7 +7,7 @@ import os
 
 st.title("Grapevine Image Classification")
 
-MODEL_URL = "https://github.com/DesireeDomingo-BSIT2B/finalproject/raw/main/save_model.keras"
+MODEL_URL = "https://github.com/DesireeDomingo-BSIT2B/finalproject/raw/main/grapevinemodel.keras"
 
 def download_model(url, filename):
     if not os.path.exists(filename):
@@ -16,16 +16,10 @@ def download_model(url, filename):
             with open(filename, 'wb') as file:
                 file.write(response.content)
             st.success("Model downloaded successfully!")
-    else:
-        st.write("Model file already exists")
 
 @st.cache_resource
 def load_model():
     download_model(MODEL_URL, 'model.keras')
-    if os.path.exists('model.keras'):
-        st.write("Model file found")
-    else:
-        st.error("Model file not found")
     model = tf.keras.models.load_model('model.keras')
     st.write("Model loaded successfully")  # Debug statement to confirm model loading
     return model
