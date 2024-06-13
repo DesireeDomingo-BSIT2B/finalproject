@@ -19,8 +19,8 @@ def download_model(url, filename):
 
 @st.cache_resource
 def load_model():
-    download_model(MODEL_URL, 'model.keras')
-    model = tf.keras.models.load_model('model.keras')
+    download_model(MODEL_URL, 'save_model.keras')
+    model = tf.keras.models.load_model('save_model.keras')
     st.write("Model loaded successfully")  # Debug statement to confirm model loading
     return model
 
