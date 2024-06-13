@@ -2,12 +2,12 @@ import streamlit as st
 import tensorflow as tf
 from PIL import Image
 import numpy as np
+import requests
 import os
 
 st.title("Grapevine Image Classification")
 
 MODEL_URL = "https://github.com/DesireeDomingo-BSIT2B/finalproject/raw/main/grapevinemodel.keras"
-DATASET_URL = "https://github.com/DesireeDomingo-BSIT2B/finalproject/raw/main/Grapevine_Leaves.zip"
 
 def download_model(url, filename):
     if not os.path.exists(filename):
@@ -17,15 +17,7 @@ def download_model(url, filename):
                 file.write(response.content)
             st.success("Model downloaded successfully!")
 
-def download_dataset(url, filename):
-    if not os.path.exists(filename):
-        with st.spinner("Downloading dataset..."):
-            response = requests.get(url)
-            with open(filename, 'wb') as file:
-                file.write(response.content)
-            st.success("Dataset downloaded successfully!")
-
-@st.cache(allow_output_mutation=True)
+@st.cache_resource
 def load_model():
     download_model(MODEL_URL, 'model.keras')
     model = tf.keras.models.load_model('model.keras')
