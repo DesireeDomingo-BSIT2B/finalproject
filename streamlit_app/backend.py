@@ -1,8 +1,8 @@
 import tensorflow as tf
 from PIL import Image
 import numpy as np
-import requests
 from flask import Flask, request, jsonify
+import requests
 
 app = Flask(__name__)
 
