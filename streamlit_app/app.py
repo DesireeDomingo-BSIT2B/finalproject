@@ -7,7 +7,7 @@ import os
 
 st.title("Grapevine Image Classification")
 
-MODEL_URL = "https://github.com/DesireeDomingo-BSIT2B/finalproject/blob/main/model1.keras"
+MODEL_URL = "https://github.com/DesireeDomingo-BSIT2B/finalproject/raw/main/grapevinemodel.keras"
 
 def download_model(url, filename):
     if not os.path.exists(filename):
@@ -19,8 +19,8 @@ def download_model(url, filename):
 
 @st.cache_resource
 def load_model():
-    download_model(MODEL_URL, 'model.h5')
-    model = tf.keras.models.load_model('model.h5')
+    download_model(MODEL_URL, 'model.keras')
+    model = tf.keras.models.load_model('model.keras')
     return model
 
 model = load_model()
@@ -36,7 +36,7 @@ if uploaded_file is not None:
 
         # Preprocess the image
         img_array = np.array(image)
-        img_array = tf.image.resize(img_array, [180, 180])  # Resize to match model input size
+        img_array = tf.image.resize(img_array, [224, 224])
         img_array = img_array / 255.0  # Normalize to [0, 1]
         img_array = np.expand_dims(img_array, axis=0)  # Add batch dimension
 
@@ -44,10 +44,10 @@ if uploaded_file is not None:
         predictions = model.predict(img_array)
         
         # Assuming you have a list of class names
-        class_names = ['Ak', 'Ala_Idris', 'Buzgulu', 'Dimnit', 'Nazli']
-        predicted_class = class_names[np.argmax(predictions)]
+        classNames = ['Ak', 'Ala_Idris', 'Buzgulu', 'Dimnit', 'Nazli']
+        predicted_class = classNames[np.argmax(predictions)]
         st.write(f'Prediction: {predicted_class}')
         
     except Exception as e:
         st.error(f"Error in classifying the image: {e}")
-        st.write(e)  # Log the detailed exception for debugging
+        st.write(e)  # Log the detailed exception for debugging   
