@@ -81,7 +81,7 @@
                 // Show loading overlay
                 document.getElementById('loadingOverlay').style.display = 'block';
 
-                model = await tf.loadLayersModel('https://github.com/DesireeDomingo-BSIT2B/finalproject/blob/main/save_model.keras');
+                model = await tf.loadLayersModel('https://<YOUR_PUBLIC_URL>/model.json');
                 console.log("Model loaded successfully");
                 // Enable classify button after model is loaded
                 document.getElementById('classifyButton').disabled = false;
@@ -89,6 +89,7 @@
                 document.getElementById('loadingOverlay').style.display = 'none';
             } catch (error) {
                 console.error("Error loading the model:", error);
+                document.getElementById('loadingOverlay').style.display = 'none';
             }
         }
 
@@ -119,7 +120,7 @@
             const img = new Image();
             img.src = URL.createObjectURL(image);
             await img.decode();
-            const tensor = tf.browser.fromPixels(img).resizeNearestNeighbor([224, 224]).toFloat().expandDims();
+            const tensor = tf.browser.fromPixels(img).resizeNearestNeighbor([180, 180]).toFloat().expandDims();
             const normalizedTensor = tensor.div(tf.scalar(255));
             const predictions = model.predict(normalizedTensor);
             const classIdx = predictions.argMax(-1).dataSync()[0];
